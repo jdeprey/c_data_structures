@@ -1,0 +1,16 @@
+/* CS261- Assignment 2 - Part 2*/
+ * Name: Joseph DePrey
+ * Date: 4/17/2016
+ * Solution description: Amortized Analysis of the Dynamic Array
+
+
+1. 56 cost units are spent in the process (1 for each new item and 8 and 16 for the two doublings of capacity) with a 1.75 average cost per operation.  As N grows larger we see that the big-oh complexity for a push is O(1)+.
+
+
+2. 1+1+1+1+1+1+1+1+9+1+11+1+13+1+15+1+17+1+19+1+21+1+23+1+25+1+27+1+29+1+31+1 = 260
+260 cost units are spent. Complexity is O(n).
+
+
+3. A sequence that would result in poor performance would be one in which there is the maximum amount of doubling and shrinking of capacity.  Suppose the initial capacity of the array is N/2, then we perform a sequence of N operations going back and forth with push() then pop().  push() doubles capacity, then pop() shrinks the array, then push() doubles it again, and so on.  This would end up with complexity of O(n^2). 
+We could avoid this by changing the shrinking policy to only shrink when the array is one third full or less(or one quarter full, etc.).  Doing so would definitely improve performance. 
+

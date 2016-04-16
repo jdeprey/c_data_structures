@@ -1,5 +1,5 @@
 all: prog testda
-	
+
 prog: dynamicArray.o stackapp.o
 	gcc -g -Wall -std=c99 -o prog dynamicArray.o stackapp.o -lm
 testda: dynamicArray.o testDynArray.o
