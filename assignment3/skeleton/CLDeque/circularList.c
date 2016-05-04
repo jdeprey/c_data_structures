@@ -1,4 +1,4 @@
-/* CS261- Assignment 3 - Problem 1*/
+/* CS261- Assignment 3 - Problem 3*/
 /* Name: Joseph DePrey
  * Date: 4/24/2016
  * Solution description: Circular List Implementation 
@@ -27,13 +27,13 @@ struct CircularList
  * Allocates the list's sentinel and sets the size to 0.
  * The sentinel's next and prev should point to the sentinel itself.
  */
-static void init(struct CircularList* list)
+static void init(  struct CircularList* list )
 {
-	assert(list != 0);
+	assert( list != 0 );
 	
 	// Allocate memory for sentinel
-	list->sentinel = malloc(sizeof(struct Link));
-	assert(list->sentinel != 0);
+	list->sentinel = malloc( sizeof( struct Link ) );
+	assert( list->sentinel != 0 );
 	
 	list->size = 0;
 
@@ -45,10 +45,10 @@ static void init(struct CircularList* list)
 /**
  * Creates a link with the given value and NULL next and prev pointers.
  */
-static struct Link* createLink(TYPE value)
+static struct Link* createLink( TYPE value )
 {
-	struct Link* newLink = malloc(sizeof(struct Link));
-	assert(newLink != 0);
+	struct Link* newLink = malloc( sizeof( struct Link ) );
+	assert( newLink != 0 );
 	newLink->value = value;
 	newLink->next = 0;
 	newLink->prev = 0;
@@ -59,11 +59,11 @@ static struct Link* createLink(TYPE value)
  * Adds a new link with the given value after the given link and
  * increments the list's size.
  */
-static void addLinkAfter(struct CircularList* list, struct Link* link, TYPE value)
+static void addLinkAfter( struct CircularList* list, struct Link* link, TYPE value )
 {
-	assert(list != 0);
-	assert(link != 0);
-	struct Link* newLink = createLink(value);
+	assert( list != 0 );
+	assert( link != 0 );
+	struct Link* newLink = createLink( value );
 	
 	newLink->prev = link;
 	newLink->next = link->next;
@@ -76,118 +76,118 @@ static void addLinkAfter(struct CircularList* list, struct Link* link, TYPE valu
  * Removes the given link from the list and
  * decrements the list's size.
  */
-static void removeLink(struct CircularList* list, struct Link* link)
+static void removeLink( struct CircularList* list, struct Link* link )
 {
-	assert(list != 0);
-	assert(link != 0);
+	assert( list != 0 );
+	assert( link != 0 );
 	// reassign pointers around link
 	link->prev->next = link->next;
 	link->next->prev = link->prev;
 
-	free(link);
+	free( link );
 	list->size--;
 }
 
 /**
  * Allocates and initializes a list.
  */
-struct CircularList* circularListCreate()
+struct CircularList* circularListCreate(  )
 {
-	struct CircularList* list = malloc(sizeof (struct CircularList));
-	init(list);
+	struct CircularList* list = malloc( sizeof ( struct CircularList ) );
+	init( list );
 	return list;
 }
 
 /**
  * Deallocates every link in the list and frees the list pointer.
  */
-void circularListDestroy(struct CircularList* list)
+void circularListDestroy( struct CircularList* list )
 {
-	assert(list != 0);
-	while(!circularListIsEmpty(list))
+	assert( list != 0 );
+	while( !circularListIsEmpty( list ) )
 	{
-		circularListRemoveFront(list);
+		circularListRemoveFront( list );
 	}
-	free(list->sentinel);
-	free(list);
+	free( list->sentinel );
+	free( list );
 }
 
 /**
  * Adds a new link with the given value to the front of the deque.
  */
-void circularListAddFront(struct CircularList* list, TYPE value)
+void circularListAddFront( struct CircularList* list, TYPE value )
 {
 	// Add link after the sentinel
-	addLinkAfter(list, list->sentinel, value);
+	addLinkAfter( list, list->sentinel, value );
 }
 
 /**
  * Adds a new link with the given value to the back of the deque.
  */
-void circularListAddBack(struct CircularList* list, TYPE value)
+void circularListAddBack( struct CircularList* list, TYPE value )
 {
 	// Add link after the link before the sentinel
-	addLinkAfter(list, list->sentinel->prev, value);
+	addLinkAfter( list, list->sentinel->prev, value );
 }
 
 /**
  * Returns the value of the link at the front of the deque.
  */
-TYPE circularListFront(struct CircularList* list)
+TYPE circularListFront( struct CircularList* list )
 {
-	assert(list != 0);
+	assert( list != 0 );
 	return list->sentinel->next->value;
 }
 
 /**
  * Returns the value of the link at the back of the deque.
  */
-TYPE circularListBack(struct CircularList* list)
+TYPE circularListBack( struct CircularList* list )
 {
-	assert(list != 0);
+	assert( list != 0 );
 	return list->sentinel->prev->value;
 }
 
 /**
  * Removes the link at the front of the deque.
  */
-void circularListRemoveFront(struct CircularList* list)
+void circularListRemoveFront( struct CircularList* list )
 {
-	removeLink(list, list->sentinel->next);
+	removeLink( list, list->sentinel->next );
 }
 
 /**
  * Removes the link at the back of the deque.
  */
-void circularListRemoveBack(struct CircularList* list)
+void circularListRemoveBack( struct CircularList* list )
 {
-	removeLink(list, list->sentinel->prev);
+	removeLink( list, list->sentinel->prev );
 }
 
 /**
  * Returns 1 if the deque is empty and 0 otherwise.
  */
-int circularListIsEmpty(struct CircularList* list)
+int circularListIsEmpty( struct CircularList* list )
 {
-	assert(list != 0);
+	assert( list != 0 );
 	return list->size == 0;
 }
 
 /**
  * Prints the values of the links in the deque from front to back.
  */
-void circularListPrint(struct CircularList* list)
+void circularListPrint( struct CircularList* list )
 {
-	assert(list != 0);
+	assert( list != 0 );
 	// Make sure list is not empty
-	assert(!circularListIsEmpty(list));
+	assert( !circularListIsEmpty( list ) );
 	// Assign temp the value of the link at the front of list
 	struct Link* temp = list->sentinel->next;
-	assert(temp != 0);
+	assert( temp != 0 );
 	// Use a temp variable to iterate through the list
-	printf("Printing entire list...\n");
-	while(temp != list->sentinel){
-		printf("%g\n", temp->value);
+	printf( "Printing entire list...\n" );
+	while( temp != list->sentinel ){
+		printf( "%g\n", temp->value );
 		temp = temp->next;
 	}
 }
@@ -195,17 +195,17 @@ void circularListPrint(struct CircularList* list)
 /**
  * Reverses the deque.
  */
-void circularListReverse(struct CircularList* list)
+void circularListReverse( struct CircularList* list )
 {
-	assert(list != 0);
+	assert( list != 0 );
 	// Make sure list is not empty
-	assert(!circularListIsEmpty(list));
+	assert( !circularListIsEmpty( list ) );
 	// Assign temp the value of the link at the front of list
 	struct Link* temp = list->sentinel->next;
-	assert(temp != 0);
+	assert( temp != 0 );
 
 	// Use a temp variable to iterate through the list, reversing the pointers
-	while(temp != list->sentinel){
+	while( temp != list->sentinel ){
 		struct Link* nextTemp = temp->next;
 		struct Link* prevTemp = temp->prev;
 		temp->prev = temp->next;
@@ -217,6 +217,6 @@ void circularListReverse(struct CircularList* list)
 	temp = list->sentinel->next;
 	list->sentinel->next = list->sentinel->prev;
 	list->sentinel->prev = temp;
-	printf("List reversed\n");
+	printf( "List reversed\n" );
 
 }

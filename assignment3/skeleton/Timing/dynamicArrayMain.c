@@ -32,7 +32,7 @@ double getMilliseconds()
 int main(int argc, char* argv[])
 {
 	#ifdef MEMORY_TEST_INCLUDED
-	// Memory used BEFORE creating LinkedList
+	// Memory used BEFORE creating Dynamic Array
 	long m1 = getMemoryUsage();
 	#endif
 
@@ -51,9 +51,9 @@ int main(int argc, char* argv[])
 	}
 
 	#ifdef MEMORY_TEST_INCLUDED
-	// Memory used AFTER creating LinkedList
+	// Memory used AFTER creating Dynamic Array
 	long m2 = getMemoryUsage();
-	printf("Memory used by LinkedList: %ld KB \n", m2 - m1);
+	printf("Memory used by Dynamic Array: %ld KB \n", m2 - m1);
 	#endif
 
 	double t1 = getMilliseconds(); // Time before contains()
