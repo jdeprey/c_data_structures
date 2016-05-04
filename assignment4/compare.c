@@ -1,3 +1,9 @@
+/* CS261 - Assignment 4 - Binary Search Trees Compare Function Implementation
+ File: compare.c
+ Name: Joseph DePrey
+ Date: 5/8/2016
+ Description: Compare function for use in Binary Search Tree
+ */
 #include <stdio.h>
 #include <assert.h>
 #include "bst.h"
@@ -23,17 +29,29 @@
   DO NOT compare the addresses pointed by left and right, i.e. "if (left < right)",
   which is really wrong.
  */
-int compare(TYPE left, TYPE right)
+int compare( TYPE left, TYPE right )
 {
-    /*FIXME: write this*/
+    assert(left != 0);
+    assert(right != 0);
+
+    struct data* leftType = ( struct data* ) left;
+    struct data* rightType = ( struct data* ) right;
+
+    //	if left < right return -1
+ 	if( leftType->number < rightType->number ){ return -1; }
+ 	//	if left > right return 1
+ 	else if( leftType->number > rightType->number ){ return 1; }
+ 	//	if left = right return 0 
 	return 0;
 
 }
 
 /*Define this function, type casting the value of void * to the desired type*/
-void print_type(TYPE curval)
+void print_type( TYPE curval )
 {
-    /*FIXME: write this*/
+    assert( curval != 0 );
+    struct data* current = ( struct data* ) curval;
+    printf( "%d", current->number);
 
 }
 
