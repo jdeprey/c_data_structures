@@ -134,7 +134,7 @@ struct Node *_addNode( struct Node *cur, TYPE val )
         newNode->left = newNode->right = 0;
         return newNode;
     }
-    else if( ( compare(val, cur->val ) == -1 ){
+    else if( compare( val, cur->val ) == -1 ){
         cur->left = _addNode(cur->left, val);
     }
     else{
@@ -173,9 +173,29 @@ void addBSTree( struct BSTree *tree, TYPE val )
 /*----------------------------------------------------------------------------*/
 int containsBSTree( struct BSTree *tree, TYPE val )
 {
-	/*write this*/
-		return 0;
+	assert(tree != 0);
+	assert(val != 0);
+	
+	struct Node *index = tree->root;
+	while( index != 0 ){
+		if( compare ( index->val, val ) == 0){
+		// if found return 1
+		return 1;
+		}
+		// continue to next branch
+		else if( compare( val, index->val ) == -1 ){
+    	    // check left child
+    	    index = index->left;
+    	}
+    	else{
+    		// check right child
+    	    index = index->right;
+    	}	
+	}
+	// if we reach a leaf and value not yet found return 0
+	return 0;
 }
+
 
 /*
  helper function to find the left most child of a node
@@ -188,8 +208,13 @@ int containsBSTree( struct BSTree *tree, TYPE val )
 /*----------------------------------------------------------------------------*/
 TYPE _leftMost( struct Node *cur )
 {
-	/*write this*/
-	return NULL;
+	assert( cur != 0 );
+	if( cur->left == 0 ){
+		return cur->val;
+	}
+	else{
+		return _leftMost( cur->left );
+	}
 }
 
 
@@ -207,8 +232,17 @@ Note:  If you do this iteratively, the above hint does not apply.
 /*----------------------------------------------------------------------------*/
 struct Node *_removeLeftMost( struct Node *cur )
 {
-	/*write this*/
-	return NULL;
+	struct Node *temp = cur->right;
+
+    if( cur->left == 0 ){
+        free( cur );
+        return temp;
+    }
+    else{
+        cur->left = _removeLeftMost( cur->left );
+    }
+
+    return cur;
 }
 /*
  recursive helper function to remove a node from the tree
@@ -222,9 +256,25 @@ struct Node *_removeLeftMost( struct Node *cur )
 /*----------------------------------------------------------------------------*/
 struct Node *_removeNode( struct Node *cur, TYPE val )
 {
-	/*write this*/
-		return NULL;
+	if( compare (cur->val, val ) == 0 ){
+        if( cur->right == 0 ){
+            struct Node *temp = cur->left;
+            free( cur );
+            return temp;
+        }
+        else{
+            cur->val = _leftMost( cur->right );
+            cur->right = _removeLeftMost( cur->right );
+        }
+    }
+    else if( compare( val, cur->val ) == -1 ){
+        cur->left = _removeNode(cur->left, val);
+    }
+    else{
+        cur->right = _removeNode(cur->right, val);
+    }
 
+    return cur;
 }
 /*
  function to remove a value from the binary search tree
@@ -502,19 +552,19 @@ int main( int argc, char *argv[] ){
 
    //After implementing your code, please uncommnet the following calls to the test functions and test your code 
 
-   // testAddNode(  );
+    testAddNode(  );
 	
 	printf( "\n" );
-   //	testContainsBSTree(  );
+   	testContainsBSTree(  );
 	
 	printf( "\n" );
-    //testLeftMost(  );
+    testLeftMost(  );
 	
 	printf( "\n" );
-    //testRemoveLeftMost(  );
+    testRemoveLeftMost(  );
 	
 	printf( "\n" );
-    //testRemoveNode(  );
+    testRemoveNode(  );
     
 	
 	return 0;
