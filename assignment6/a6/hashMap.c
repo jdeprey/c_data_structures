@@ -168,27 +168,28 @@ int* hashMapGet(HashMap* map, const char* key)
  */
 void resizeTable(HashMap* map, int capacity)
 {
-    // FIXME: implement
+    // New Map with expanded capacity
     struct HashMap *newMap = hashMapNew(capacity);
     struct HashLink *link;
 
     for(int i = 0; i < map->capacity; i++){
         
+        // Iterator to go through links
         link = map->table[i];
-
+        // Add links with put function
         while(link != NULL){
             hashMapPut(newMap, link->key, link->value);
             link = link->next;
         }
     }
 
+    // Swap table pointers and capacities
     hashMapCleanUp(map);
     map->table = newMap->table;
     map->size = newMap->size;
     map->capacity = newMap->capacity;
-
-    newMap->table = NULL;
-    // hashMapDelete(newMap);
+    // Free the temp map
+    free(newMap);
 }
 
 /**
@@ -206,7 +207,6 @@ void resizeTable(HashMap* map, int capacity)
  */
 void hashMapPut(HashMap* map, const char* key, int value)
 {
-    // FIXME: implement
     int hashIndex = HASH_FUNCTION(key) % map->capacity;
     if(hashIndex < 0) hashIndex += map->capacity;
 
