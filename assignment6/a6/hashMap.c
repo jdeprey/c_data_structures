@@ -141,7 +141,7 @@ void hashMapDelete(HashMap* map)
 int* hashMapGet(HashMap* map, const char* key)
 {
     // FIXME: implement
-    int hashIndex = HASH_FUNCTION(key);
+    int hashIndex = HASH_FUNCTION(key) % map->capacity;
     if(hashIndex < 0) hashIndex += map->capacity;
 
     struct HashLink *link = map->table[hashIndex];
@@ -210,7 +210,7 @@ void resizeTable(HashMap* map, int capacity)
 void hashMapPut(HashMap* map, const char* key, int value)
 {
     // FIXME: implement
-    int hashIndex = HASH_FUNCTION(key);
+    int hashIndex = HASH_FUNCTION(key) % map->capacity;
     if(hashIndex < 0) hashIndex += map->capacity;
 
     struct HashLink *link = map->table[hashIndex];
@@ -250,7 +250,7 @@ void hashMapRemove(HashMap* map, const char* key)
     // FIXME: implement
     assert(map != NULL);
 
-    int hashIndex = HASH_FUNCTION(key);
+    int hashIndex = HASH_FUNCTION(key) % map->capacity;
     if(hashIndex < 0) hashIndex += map->capacity;
 
     struct HashLink *link = map->table[hashIndex];
@@ -293,7 +293,7 @@ void hashMapRemove(HashMap* map, const char* key)
 int hashMapContainsKey(HashMap* map, const char* key)
 {
     // FIXME: implement
-    int hashIndex = HASH_FUNCTION(key);
+    int hashIndex = HASH_FUNCTION(key) % map->capacity;
     if(hashIndex < 0) hashIndex += map->capacity;
 
     struct HashLink *link = map->table[hashIndex];
