@@ -1,8 +1,8 @@
 /*
  * CS 261 Data Structures
  * Assignment 6
- * Name: 
- * Date: 
+ * Name: Joseph DePrey
+ * Date: 05/29/2016
  */
 
 #include "hashMap.h"
@@ -83,7 +83,25 @@ void hashMapInit(HashMap* map, int capacity)
 void hashMapCleanUp(HashMap* map)
 {
     // FIXME: implement
+    struct HashLink *current;
+    struct HashLink *next;
+
+    for(int i = 0; i < map->capacity; i++){
+        // First link in each bucket
+        current = map->table[i];
+        // Iterate through each link in bucket
+        if(current != NULL){
+            do {
+                next = current->next;
+                hashLinkDelete(current);
+                current = next;
+            } while (next != NULL);
+        }
+    }
+    free(map->table);
+    map->table = NULL;
 }
+
 
 /**
  * Creates a hash table map, allocating memory for a link pointer table with
@@ -123,6 +141,17 @@ void hashMapDelete(HashMap* map)
 int* hashMapGet(HashMap* map, const char* key)
 {
     // FIXME: implement
+    int hashIndex = HASH_FUNCTION(key);
+    if(hashIndex < 0) hashIndex += map->capacity;
+
+    struct HashLink *current = map->table[hashIndex];
+
+    while(current != NULL){
+        if(strcmp(current->key, key) == 0)
+            return &current->value;
+        else
+            current = current->next;
+    }
     return NULL;
 }
 
@@ -140,6 +169,29 @@ int* hashMapGet(HashMap* map, const char* key)
 void resizeTable(HashMap* map, int capacity)
 {
     // FIXME: implement
+    struct HashMap *newMap = hashMapNew(capacity);
+    struct HashLink *current;
+
+    for(int i = 0; i < map->capacity; i++){
+        
+        current = map->table[i];
+
+        if (map->table[i] == NULL){
+            continue;
+        }
+
+        do {
+            hashMapPut(newMap, current->key, current->value);
+        } while (current != NULL);
+    }
+
+    hashMapCleanUp(map);
+    map->table = newMap->table;
+    map->size = newMap->size;
+    map->capacity = newMap->capacity;
+
+    newMap->table = NULL;
+    hashMapDelete(newMap);
 }
 
 /**
@@ -158,6 +210,41 @@ void resizeTable(HashMap* map, int capacity)
 void hashMapPut(HashMap* map, const char* key, int value)
 {
     // FIXME: implement
+    int hashIndex = HASH_FUNCTION(key);
+    if(hashIndex < 0) hashIndex += map->capacity;
+
+    struct HashLink *current = map->table[hashIndex];
+
+    if(current == NULL){
+        map->table[hashIndex] = hashLinkNew(key, value, NULL);
+        map->size++;
+        // Resize if load factor too high 
+        if(hashMapTableLoad(map) > MAX_TABLE_LOAD){
+            resizeTable(map, 2 * hashMapCapacity(map));
+        }
+        return;
+    } else if(strcmp(current->key, key) == 0){
+            // update with new value
+            current->value = value;
+            return;
+    } else {
+        while(current->next != NULL){
+            if(strcmp(current->next->key, key) == 0){
+                current->value = value;
+                return;
+            }
+            // keep searching
+            current = current->next;
+        }
+
+        current->next = hashLinkNew(key, value, NULL);
+        map->size++;
+
+        // Resize if load factor too high 
+        if(hashMapTableLoad(map) > MAX_TABLE_LOAD){
+            resizeTable(map, 2 * hashMapCapacity(map));
+        }
+    }
 }
 
 /**
@@ -169,7 +256,38 @@ void hashMapPut(HashMap* map, const char* key, int value)
  */
 void hashMapRemove(HashMap* map, const char* key)
 {
+    
     // FIXME: implement
+    assert(map != NULL);
+
+    int hashIndex = HASH_FUNCTION(key);
+    if(hashIndex < 0) hashIndex += map->capacity;
+
+    struct HashLink *current = map->table[hashIndex];
+    struct HashLink *next = map->table[hashIndex]->next;
+
+    if(current == NULL){
+        return;
+    }
+
+    if(strcmp(current->key, key) == 0){
+            hashLinkDelete(current);
+            map->table[hashIndex] = next;
+            map->size--;
+            return;
+    }
+
+    while(next != NULL){
+        if(strcmp(next->key, key) == 0){
+            current->next = next->next;
+            hashLinkDelete(next);
+            map->size--;
+            return;
+        } else {
+            current = current->next;
+            next = next->next;
+        }       
+    }
 }
 
 /**
@@ -185,6 +303,17 @@ void hashMapRemove(HashMap* map, const char* key)
 int hashMapContainsKey(HashMap* map, const char* key)
 {
     // FIXME: implement
+    int hashIndex = HASH_FUNCTION(key);
+    if(hashIndex < 0) hashIndex += map->capacity;
+
+    struct HashLink *current = map->table[hashIndex];
+
+    while(current != NULL){
+        if(strcmp(current->key, key) == 0)
+            return 1;
+        else
+            current = current->next;
+    }
     return 0;
 }
 
@@ -195,8 +324,7 @@ int hashMapContainsKey(HashMap* map, const char* key)
  */
 int hashMapSize(HashMap* map)
 {
-    // FIXME: implement
-    return 0;
+    return map->size;
 }
 
 /**
@@ -206,8 +334,7 @@ int hashMapSize(HashMap* map)
  */
 int hashMapCapacity(HashMap* map)
 {
-    // FIXME: implement
-    return 0;
+    return map->capacity;
 }
 
 /**
@@ -217,8 +344,14 @@ int hashMapCapacity(HashMap* map)
  */
 int hashMapEmptyBuckets(HashMap* map)
 {
-    // FIXME: implement
-    return 0;
+    int count = 0;
+
+    for(int i = 0; i < map->capacity; i++){
+        if(map->table[i] == NULL){
+            count++;
+        }
+    }
+    return count;    
 }
 
 /**
@@ -231,8 +364,7 @@ int hashMapEmptyBuckets(HashMap* map)
  */
 float hashMapTableLoad(HashMap* map)
 {
-    // FIXME: implement
-    return 0;
+    return (double)map->size / map->capacity;
 }
 
 /**
