@@ -426,7 +426,6 @@ void testAddNode(  ) {
     }
     else printf( "addNode(  ) test: PASS when adding 110 as right of root\n" );
     
-    
 	myData4.number = 10;
 	myData4.name = "righty of lefty";
 	addBSTree( tree, &myData4 );
@@ -565,7 +564,7 @@ int main( int argc, char *argv[] ){
 	
 	printf( "\n" );
     testRemoveNode(  );
-    
+
 	
 	return 0;
 
