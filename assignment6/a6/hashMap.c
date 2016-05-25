@@ -176,13 +176,10 @@ void resizeTable(HashMap* map, int capacity)
         
         link = map->table[i];
 
-        if (map->table[i] == NULL){
-            continue;
-        }
-
-        do {
+        while(link != NULL){
             hashMapPut(newMap, link->key, link->value);
-        } while (link != NULL);
+            link = link->next;
+        }
     }
 
     hashMapCleanUp(map);
@@ -191,7 +188,7 @@ void resizeTable(HashMap* map, int capacity)
     map->capacity = newMap->capacity;
 
     newMap->table = NULL;
-    hashMapDelete(newMap);
+    // hashMapDelete(newMap);
 }
 
 /**
